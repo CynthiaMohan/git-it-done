@@ -16,11 +16,11 @@ var getUserRepos = function (user) {
                 });
             }
             else {
-                alert(`Error:${response.statusText}`);
+                alert('Error:' + response.statusText);
             }
         })
         .catch(function (error) {
-            alert(`Unable to connect to GitHub`);
+            alert('Unable to connect to GitHub');
         });
 };
 var formSubmitHandler = function (event) {
@@ -39,15 +39,16 @@ var formSubmitHandler = function (event) {
 };
 
 var displayRepos = function (repos, searchTerm) {
-    if (repoContainerEl.length === 0) {
-        console.log(repoContainerEl.length);
-        repoContainerEl.textContent = "No repositories found";
+    if (repos.length === 0) {
+        console.log(repos.length);
+        repoContainerEl.textContent = 'No repositories found';
+        return;
     }
-    repoContainerEl.textContent = ' ';
     repoSearchTerm.textContent = searchTerm;
     //check if the api returned any repos
 
     for (let i = 0; i < repos.length; i++) {
+
         //format the repo name
         var repoName = repos[i].owner.login + "/" + repos[i].name;
 
