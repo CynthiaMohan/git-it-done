@@ -8,11 +8,20 @@ var getUserRepos = function (user) {
     var apiUrl = "https://api.github.com/users/" + user + "/repos";
 
     //make a request to the url
-    fetch(apiUrl).then(function (response) {
-        response.json().then(function (data) {
-            displayRepos(data, user);
+    fetch(apiUrl)//if fulfilled 
+        .then(function (response) {
+            if (response.ok) {
+                response.json().then(function (data) {
+                    displayRepos(data, user);
+                });
+            }
+            else {
+                alert(`Error:${response.statusText}`);
+            }
+        })
+        .catch(function (error) {
+            alert(`Unable to connect to GitHub`);
         });
-    });
 };
 var formSubmitHandler = function (event) {
     event.preventDefault();
@@ -30,8 +39,14 @@ var formSubmitHandler = function (event) {
 };
 
 var displayRepos = function (repos, searchTerm) {
+    if (repoContainerEl.length === 0) {
+        console.log(repoContainerEl.length);
+        repoContainerEl.textContent = "No repositories found";
+    }
     repoContainerEl.textContent = ' ';
     repoSearchTerm.textContent = searchTerm;
+    //check if the api returned any repos
+
     for (let i = 0; i < repos.length; i++) {
         //format the repo name
         var repoName = repos[i].owner.login + "/" + repos[i].name;
@@ -46,6 +61,20 @@ var displayRepos = function (repos, searchTerm) {
 
         //append to container
         repoEl.appendChild(titleEl);
+
+        //create a status element
+        var statusEl = document.createElement("span");
+        statusEl.classList = "flex-row align-center";
+
+        //check if current repo has issues or not
+        if (repos[i].open_issues_count > 0) {
+            statusEl.innerHTML = "<i class=' fas fa-times status-icon icon-danger'></i>" + repos[i].open_issues_count + "issues(s)";
+        }
+        else {
+            statusEl.innerHTML = "<i class='fas fa-check-square status-iconicon-success'></i>";
+        }
+        //append status to the container
+        repoEl.appendChild(statusEl);
 
         //append container to DOM
         repoContainerEl.appendChild(repoEl);
