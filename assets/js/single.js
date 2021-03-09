@@ -77,7 +77,13 @@ var displayWarning = function (repo) {
 var getRepoName = function () {
     var queryString = document.location.search;
     var repoName = queryString.split("=")[1];
-    getRepoIssues(repoName);
+    if (repoName) {
+        repoNameEl.textContent = repoName;
+        getRepoIssues(repoName);
+    }
+    else {
+        document.location.replace("./index.html");
+    }
     repoNameEl.textContent = repoName;
     console.log(repoName);
 };
